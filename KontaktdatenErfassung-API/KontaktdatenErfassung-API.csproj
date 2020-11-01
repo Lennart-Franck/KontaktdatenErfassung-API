@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>KontaktdatenErfassung_API</RootNamespace>
+    <UserSecretsId>52e52b7a-b568-492d-9084-539e5f76db61</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
