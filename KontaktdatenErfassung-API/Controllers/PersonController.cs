@@ -20,12 +20,13 @@ namespace KontaktdatenErfassung_API.Controllers
             _context = context;
         }
 
+        //Nicht erlaubte Action
         // GET: api/Person
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> GetPerson()
-        {
-            return await _context.Person.ToListAsync();
-        }
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<Person>>> GetPerson()
+        //{
+        //    return await _context.Person.ToListAsync();
+        //}
 
         // GET: api/Person/5
         [HttpGet("{id}")]

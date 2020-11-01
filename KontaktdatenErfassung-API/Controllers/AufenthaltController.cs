@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KontaktdatenErfassung_API.Models;
@@ -20,25 +18,27 @@ namespace KontaktdatenErfassung_API.Controllers
             _context = context;
         }
 
+        //Soll nicht erreichbar sein
         // GET: api/Aufenthalt
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Aufenthalt>>> GetAufenthalt()
-        {
-            return await _context.Aufenthalt.ToListAsync();
-        }
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<Aufenthalt>>> GetAufenthalt()
+        //{
+        //    return await _context.Aufenthalt.ToListAsync();
+        //}
 
+        //Aufenthalte für die Person bekommen
         // GET: api/Aufenthalt/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Aufenthalt>> GetAufenthalt(int id)
+        [HttpGet("{PersonID}")]
+        public async Task<ActionResult<IEnumerable<Aufenthalt>>> GetAufenthalt(int PersonID)
         {
-            var aufenthalt = await _context.Aufenthalt.FindAsync(id);
+            var aufenthalte = await _context.Aufenthalt.Where(x => x.PersonId == PersonID).ToListAsync();
 
-            if (aufenthalt == null)
+            if (aufenthalte == null)
             {
                 return NotFound();
             }
 
-            return aufenthalt;
+            return aufenthalte;
         }
 
         // PUT: api/Aufenthalt/5
@@ -82,7 +82,7 @@ namespace KontaktdatenErfassung_API.Controllers
             _context.Aufenthalt.Add(aufenthalt);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAufenthalt", new { id = aufenthalt.Id }, aufenthalt);
+            return aufenthalt;
         }
 
         // DELETE: api/Aufenthalt/5
