@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KontaktdatenErfassung_API.Models;
+using System;
 
 namespace KontaktdatenErfassung_API.Controllers
 {
@@ -29,7 +30,7 @@ namespace KontaktdatenErfassung_API.Controllers
         //Aufenthalte für die Person bekommen
         // GET: api/Aufenthalt/5
         [HttpGet("{PersonID}")]
-        public async Task<ActionResult<IEnumerable<Aufenthalt>>> GetAufenthalt(int PersonID)
+        public async Task<ActionResult<IEnumerable<Aufenthalt>>> GetAufenthalt(Guid PersonID)
         {
             var aufenthalte = await _context.Aufenthalt.Where(x => x.PersonId == PersonID).ToListAsync();
 

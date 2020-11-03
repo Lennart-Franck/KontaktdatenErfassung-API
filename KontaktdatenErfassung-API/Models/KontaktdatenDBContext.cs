@@ -23,7 +23,6 @@ namespace KontaktdatenErfassung_API.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-
             }
         }
 
@@ -56,7 +55,9 @@ namespace KontaktdatenErfassung_API.Models
 
             modelBuilder.Entity<Ort>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Bezeichnung)
                     .IsRequired()
@@ -90,7 +91,9 @@ namespace KontaktdatenErfassung_API.Models
 
             modelBuilder.Entity<Person>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Email)
                     .IsRequired()

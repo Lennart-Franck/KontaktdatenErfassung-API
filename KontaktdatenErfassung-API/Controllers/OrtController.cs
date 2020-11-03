@@ -30,7 +30,7 @@ namespace KontaktdatenErfassung_API.Controllers
 
         // GET: api/Ort/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Ort>> GetOrt(int id)
+        public async Task<ActionResult<Ort>> GetOrt(Guid id)
         {
             var ort = await _context.Ort.FindAsync(id);
 
@@ -46,7 +46,7 @@ namespace KontaktdatenErfassung_API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrt(int id, Ort ort)
+        public async Task<IActionResult> PutOrt(Guid id, Ort ort)
         {
             if (id != ort.Id)
             {
@@ -88,7 +88,7 @@ namespace KontaktdatenErfassung_API.Controllers
 
         // DELETE: api/Ort/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Ort>> DeleteOrt(int id)
+        public async Task<ActionResult<Ort>> DeleteOrt(Guid id)
         {
             var ort = await _context.Ort.FindAsync(id);
             if (ort == null)
@@ -102,7 +102,7 @@ namespace KontaktdatenErfassung_API.Controllers
             return ort;
         }
 
-        private bool OrtExists(int id)
+        private bool OrtExists(Guid id)
         {
             return _context.Ort.Any(e => e.Id == id);
         }

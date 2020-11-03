@@ -30,7 +30,7 @@ namespace KontaktdatenErfassung_API.Controllers
 
         // GET: api/Person/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Person>> GetPerson(int id)
+        public async Task<ActionResult<Person>> GetPerson(Guid id)
         {
             var person = await _context.Person.FindAsync(id);
 
@@ -46,7 +46,7 @@ namespace KontaktdatenErfassung_API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPerson(int id, Person person)
+        public async Task<IActionResult> PutPerson(Guid id, Person person)
         {
             if (id != person.Id)
             {
@@ -88,7 +88,7 @@ namespace KontaktdatenErfassung_API.Controllers
 
         // DELETE: api/Person/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Person>> DeletePerson(int id)
+        public async Task<ActionResult<Person>> DeletePerson(Guid id)
         {
             var person = await _context.Person.FindAsync(id);
             if (person == null)
@@ -102,7 +102,7 @@ namespace KontaktdatenErfassung_API.Controllers
             return person;
         }
 
-        private bool PersonExists(int id)
+        private bool PersonExists(Guid id)
         {
             return _context.Person.Any(e => e.Id == id);
         }

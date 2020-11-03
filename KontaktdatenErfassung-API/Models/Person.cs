@@ -10,7 +10,7 @@ namespace KontaktdatenErfassung_API.Models
             Aufenthalt = new HashSet<Aufenthalt>();
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Vorname { get; set; }
         public string Nachname { get; set; }
         public string Email { get; set; }
