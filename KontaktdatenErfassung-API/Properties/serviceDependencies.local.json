@@ -4,7 +4,7 @@
       "type": "secrets.user"
     },
     "mssql1": {
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/software-projekt-wi/databases/KontaktdatenDB",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/software-projekt/databases/Kontaktdaten-DB",
       "type": "mssql.azure",
       "connectionId": "KontaktdatenDB",
       "secretStore": "LocalSecretsFile"

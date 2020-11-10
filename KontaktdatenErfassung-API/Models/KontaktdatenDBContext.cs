@@ -23,8 +23,6 @@ namespace KontaktdatenErfassung_API.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=software-projekt.database.windows.net;Database=Kontaktdaten-DB;User ID=wiuser;Password=K0ntaktdat3n");
             }
         }
 
@@ -36,25 +34,25 @@ namespace KontaktdatenErfassung_API.Models
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.BisDatum).HasColumnType("datetime");
+                entity.Property(e => e.DatumBis).HasColumnType("datetime");
+
+                entity.Property(e => e.DatumVon).HasColumnType("datetime");
 
                 entity.Property(e => e.OrtId).HasColumnName("OrtID");
 
                 entity.Property(e => e.PersonId).HasColumnName("PersonID");
 
-                entity.Property(e => e.VonDatum).HasColumnType("datetime");
-
                 entity.HasOne(d => d.Ort)
                     .WithMany(p => p.Aufenthalt)
                     .HasForeignKey(d => d.OrtId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tab_aufenthalt_tab_ort");
+                    .HasConstraintName("FK_aufenthalt_ort");
 
                 entity.HasOne(d => d.Person)
                     .WithMany(p => p.Aufenthalt)
                     .HasForeignKey(d => d.PersonId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tab_aufenthalt_tab_person");
+                    .HasConstraintName("FK_aufenthalt_person");
             });
 
             modelBuilder.Entity<Ort>(entity =>

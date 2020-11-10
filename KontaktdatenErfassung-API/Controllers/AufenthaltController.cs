@@ -84,7 +84,7 @@ namespace KontaktdatenErfassung_API.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
                 if (AufenthaltExists(Aufenthalt.Id))
                 {
@@ -96,7 +96,7 @@ namespace KontaktdatenErfassung_API.Controllers
                 }
             }
 
-            return CreatedAtAction("GetAufenthalt", new { id = Aufenthalt.Id }, Aufenthalt);
+            return Aufenthalt;
         }
 
         // DELETE: api/Aufenthalt/5
