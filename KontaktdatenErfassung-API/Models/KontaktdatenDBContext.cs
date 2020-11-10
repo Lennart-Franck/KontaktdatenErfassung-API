@@ -23,6 +23,8 @@ namespace KontaktdatenErfassung_API.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=software-projekt.database.windows.net;Database=Kontaktdaten-DB;User ID=wiuser;Password=K0ntaktdat3n");
             }
         }
 
@@ -30,31 +32,35 @@ namespace KontaktdatenErfassung_API.Models
         {
             modelBuilder.Entity<Aufenthalt>(entity =>
             {
+                entity.ToTable("aufenthalt");
+
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.DatumBis).HasColumnType("datetime");
-
-                entity.Property(e => e.DatumVon).HasColumnType("datetime");
+                entity.Property(e => e.BisDatum).HasColumnType("datetime");
 
                 entity.Property(e => e.OrtId).HasColumnName("OrtID");
 
                 entity.Property(e => e.PersonId).HasColumnName("PersonID");
 
+                entity.Property(e => e.VonDatum).HasColumnType("datetime");
+
                 entity.HasOne(d => d.Ort)
                     .WithMany(p => p.Aufenthalt)
                     .HasForeignKey(d => d.OrtId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Aufenthalt_Ort");
+                    .HasConstraintName("FK_tab_aufenthalt_tab_ort");
 
                 entity.HasOne(d => d.Person)
                     .WithMany(p => p.Aufenthalt)
                     .HasForeignKey(d => d.PersonId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Aufenthalt_Person");
+                    .HasConstraintName("FK_tab_aufenthalt_tab_person");
             });
 
             modelBuilder.Entity<Ort>(entity =>
             {
+                entity.ToTable("ort");
+
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
                     .HasDefaultValueSql("(newid())");
@@ -85,12 +91,14 @@ namespace KontaktdatenErfassung_API.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Telefon)
-                    .HasMaxLength(15)
+                    .HasMaxLength(20)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<Person>(entity =>
             {
+                entity.ToTable("person");
+
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
                     .HasDefaultValueSql("(newid())");
@@ -121,7 +129,7 @@ namespace KontaktdatenErfassung_API.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Telefon)
-                    .HasMaxLength(15)
+                    .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Vorname)

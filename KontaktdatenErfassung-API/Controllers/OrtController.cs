@@ -20,9 +20,8 @@ namespace KontaktdatenErfassung_API.Controllers
             _context = context;
         }
 
-        //Nicht erlaubte Action
         // GET: api/Ort
-        //[HttpGet]
+        [HttpGet]
         //public async Task<ActionResult<IEnumerable<Ort>>> GetOrt()
         //{
         //    return await _context.Ort.ToListAsync();
@@ -46,14 +45,14 @@ namespace KontaktdatenErfassung_API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrt(Guid id, Ort ort)
+        public async Task<IActionResult> PutOrt(Guid id, Ort Ort)
         {
-            if (id != ort.Id)
+            if (id != Ort.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(ort).State = EntityState.Modified;
+            _context.Entry(Ort).State = EntityState.Modified;
 
             try
             {
@@ -78,12 +77,26 @@ namespace KontaktdatenErfassung_API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Ort>> PostOrt(Ort ort)
+        public async Task<ActionResult<Ort>> PostOrt(Ort Ort)
         {
-            _context.Ort.Add(ort);
-            await _context.SaveChangesAsync();
+            _context.Ort.Add(Ort);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (OrtExists(Ort.Id))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-            return CreatedAtAction("GetOrt", new { id = ort.Id }, ort);
+            return CreatedAtAction("GetOrt", new { id = Ort.Id }, Ort);
         }
 
         // DELETE: api/Ort/5

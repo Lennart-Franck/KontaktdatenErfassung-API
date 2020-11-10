@@ -13,22 +13,21 @@ namespace KontaktdatenErfassung_API.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-        private readonly KontaktdatenDBContext _context;
+        private KontaktdatenDBContext _context;
 
         public PersonController(KontaktdatenDBContext context)
         {
             _context = context;
         }
 
-        //Nicht erlaubte Action
-        // GET: api/Person
+        // GET: api/Persons
         //[HttpGet]
         //public async Task<ActionResult<IEnumerable<Person>>> GetPerson()
         //{
         //    return await _context.Person.ToListAsync();
         //}
 
-        // GET: api/Person/5
+        // GET: api/Persons/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Person>> GetPerson(Guid id)
         {
@@ -42,18 +41,18 @@ namespace KontaktdatenErfassung_API.Controllers
             return person;
         }
 
-        // PUT: api/Person/5
+        // PUT: api/Persons/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPerson(Guid id, Person person)
+        public async Task<IActionResult> PutPerson(Guid id, Person Person)
         {
-            if (id != person.Id)
+            if (id != Person.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(person).State = EntityState.Modified;
+            _context.Entry(Person).State = EntityState.Modified;
 
             try
             {
@@ -74,19 +73,33 @@ namespace KontaktdatenErfassung_API.Controllers
             return NoContent();
         }
 
-        // POST: api/Person
+        // POST: api/Persons
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Person>> PostPerson(Person person)
+        public async Task<ActionResult<Person>> PostPerson(Person Person)
         {
-            _context.Person.Add(person);
-            await _context.SaveChangesAsync();
+            _context.Person.Add(Person);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (PersonExists(Person.Id))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-            return CreatedAtAction("GetPerson", new { id = person.Id }, person);
+            return CreatedAtAction("GetPerson", new { id = Person.Id }, Person);
         }
 
-        // DELETE: api/Person/5
+        // DELETE: api/Persons/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Person>> DeletePerson(Guid id)
         {

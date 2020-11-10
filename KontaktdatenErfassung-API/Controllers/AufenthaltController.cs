@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KontaktdatenErfassung_API.Models;
-using System;
 
 namespace KontaktdatenErfassung_API.Controllers
 {
@@ -12,14 +13,13 @@ namespace KontaktdatenErfassung_API.Controllers
     [ApiController]
     public class AufenthaltController : ControllerBase
     {
-        private readonly KontaktdatenDBContext _context;
+        private KontaktdatenDBContext _context;
 
         public AufenthaltController(KontaktdatenDBContext context)
         {
             _context = context;
         }
 
-        //Soll nicht erreichbar sein
         // GET: api/Aufenthalt
         //[HttpGet]
         //public async Task<ActionResult<IEnumerable<Aufenthalt>>> GetAufenthalt()
@@ -27,19 +27,18 @@ namespace KontaktdatenErfassung_API.Controllers
         //    return await _context.Aufenthalt.ToListAsync();
         //}
 
-        //Aufenthalte für die Person bekommen
         // GET: api/Aufenthalt/5
         [HttpGet("{PersonID}")]
-        public async Task<ActionResult<IEnumerable<Aufenthalt>>> GetAufenthalt(Guid PersonID)
+        public async Task<ActionResult<List<Aufenthalt>>> GetAufenthalteByPerson(Guid PersonID)
         {
-            var aufenthalte = await _context.Aufenthalt.Where(x => x.PersonId == PersonID).ToListAsync();
+            var aufenthalt = await _context.Aufenthalt.Where(x => x.PersonId == PersonID).ToListAsync();
 
-            if (aufenthalte == null)
+            if (aufenthalt == null)
             {
                 return NotFound();
             }
 
-            return aufenthalte;
+            return aufenthalt;
         }
 
         // PUT: api/Aufenthalt/5
@@ -78,28 +77,42 @@ namespace KontaktdatenErfassung_API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Aufenthalt>> PostAufenthalt(Aufenthalt aufenthalt)
+        public async Task<ActionResult<Aufenthalt>> PostAufenthalt(Aufenthalt Aufenthalt)
         {
-            _context.Aufenthalt.Add(aufenthalt);
-            await _context.SaveChangesAsync();
+            _context.Aufenthalt.Add(Aufenthalt);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (AufenthaltExists(Aufenthalt.Id))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-            return aufenthalt;
+            return CreatedAtAction("GetAufenthalt", new { id = Aufenthalt.Id }, Aufenthalt);
         }
 
         // DELETE: api/Aufenthalt/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Aufenthalt>> DeleteAufenthalt(int id)
         {
-            var aufenthalt = await _context.Aufenthalt.FindAsync(id);
-            if (aufenthalt == null)
+            var Aufenthalt = await _context.Aufenthalt.FindAsync(id);
+            if (Aufenthalt == null)
             {
                 return NotFound();
             }
 
-            _context.Aufenthalt.Remove(aufenthalt);
+            _context.Aufenthalt.Remove(Aufenthalt);
             await _context.SaveChangesAsync();
 
-            return aufenthalt;
+            return Aufenthalt;
         }
 
         private bool AufenthaltExists(int id)
