@@ -28,7 +28,6 @@ namespace KontaktdatenErfassung_API.Middleware
                 await context.Response.WriteAsync("Api Key wurde nicht bereitgestellt");
                 return;
             }
-
             
             var appSettings = context.RequestServices.GetRequiredService<IConfiguration>();
 

@@ -67,14 +67,16 @@ namespace KontaktdatenErfassung_API
 
             app.UseAuthorization();
 
+
             
+
             //Use API KEY Middleware only on Controllers
-            app.MapWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
+            app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
             {
                 appBuilder.UseMiddleware<ApiKeyMiddleware>();
             });
 
-           
+            
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
@@ -90,6 +92,7 @@ namespace KontaktdatenErfassung_API
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }
