@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KontaktdatenErfassung_API.Middleware;
 using KontaktdatenErfassung_API.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -66,6 +67,14 @@ namespace KontaktdatenErfassung_API
 
             app.UseAuthorization();
 
+            
+            //Use API KEY Middleware only on Controllers
+            app.MapWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
+            {
+                appBuilder.UseMiddleware<ApiKeyMiddleware>();
+            });
+
+           
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
