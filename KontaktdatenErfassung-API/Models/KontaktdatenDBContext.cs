@@ -18,6 +18,7 @@ namespace KontaktdatenErfassung_API.Models
         public virtual DbSet<Aufenthalt> Aufenthalt { get; set; }
         public virtual DbSet<Ort> Ort { get; set; }
         public virtual DbSet<Person> Person { get; set; }
+        public virtual DbSet<Unternehmen> Unternehmen { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -59,8 +60,8 @@ namespace KontaktdatenErfassung_API.Models
             {
                 entity.ToTable("ort");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
+                entity.Property(e => e.OrtId)
+                    .HasColumnName("OrtID")
                     .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Bezeichnung)
@@ -68,11 +69,6 @@ namespace KontaktdatenErfassung_API.Models
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Hausnummer)
                     .IsRequired()
                     .HasMaxLength(5)
@@ -88,51 +84,86 @@ namespace KontaktdatenErfassung_API.Models
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Telefon)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
+                entity.Property(e => e.UnternehmenId).HasColumnName("UnternehmenID");
+
+                entity.HasOne(d => d.Unternehmen)
+                    .WithMany(p => p.Ort)
+                    .HasForeignKey(d => d.UnternehmenId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ort_unternehmen");
             });
 
             modelBuilder.Entity<Person>(entity =>
             {
                 entity.ToTable("person");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
+                entity.Property(e => e.PersonId)
+                    .HasColumnName("PersonID")
                     .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasMaxLength(30)
+                    .HasMaxLength(128)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Hausnummer)
                     .IsRequired()
-                    .HasMaxLength(5)
+                    .HasMaxLength(128)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Nachname)
                     .IsRequired()
-                    .HasMaxLength(20)
+                    .HasMaxLength(128)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Plz)
+                    .IsRequired()
+                    .HasMaxLength(128)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Stadt)
                     .IsRequired()
-                    .HasMaxLength(30)
+                    .HasMaxLength(128)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Straße)
                     .IsRequired()
-                    .HasMaxLength(30)
+                    .HasMaxLength(128)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Telefon)
-                    .HasMaxLength(20)
+                    .HasMaxLength(128)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Vorname)
                     .IsRequired()
-                    .HasMaxLength(20)
+                    .HasMaxLength(128)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Unternehmen>(entity =>
+            {
+                entity.ToTable("unternehmen");
+
+                entity.Property(e => e.UnternehmenId)
+                    .HasColumnName("UnternehmenID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Passwort)
+                    .IsRequired()
+                    .HasMaxLength(128)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Telefon)
+                    .HasMaxLength(128)
                     .IsUnicode(false);
             });
 

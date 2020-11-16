@@ -84,7 +84,7 @@ namespace KontaktdatenErfassung_API.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 if (AufenthaltExists(Aufenthalt.Id))
                 {
