@@ -47,7 +47,7 @@ namespace KontaktdatenErfassung_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPerson(Guid id, Person Person)
         {
-            if (id != Person.Id)
+            if (id != Person.PersonId)
             {
                 return BadRequest();
             }
@@ -86,7 +86,7 @@ namespace KontaktdatenErfassung_API.Controllers
             }
             catch (DbUpdateException)
             {
-                if (PersonExists(Person.Id))
+                if (PersonExists(Person.PersonId))
                 {
                     return Conflict();
                 }
@@ -96,7 +96,7 @@ namespace KontaktdatenErfassung_API.Controllers
                 }
             }
 
-            return CreatedAtAction("GetPerson", new { id = Person.Id }, Person);
+            return CreatedAtAction("GetPerson", new { id = Person.PersonId }, Person);
         }
 
         // DELETE: api/Persons/5
@@ -117,7 +117,7 @@ namespace KontaktdatenErfassung_API.Controllers
 
         private bool PersonExists(Guid id)
         {
-            return _context.Person.Any(e => e.Id == id);
+            return _context.Person.Any(e => e.PersonId == id);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace KontaktdatenErfassung_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrt(Guid id, Ort Ort)
         {
-            if (id != Ort.Id)
+            if (id != Ort.OrtId)
             {
                 return BadRequest();
             }
@@ -86,7 +86,7 @@ namespace KontaktdatenErfassung_API.Controllers
             }
             catch (DbUpdateException)
             {
-                if (OrtExists(Ort.Id))
+                if (OrtExists(Ort.OrtId))
                 {
                     return Conflict();
                 }
@@ -96,7 +96,7 @@ namespace KontaktdatenErfassung_API.Controllers
                 }
             }
 
-            return CreatedAtAction("GetOrt", new { id = Ort.Id }, Ort);
+            return CreatedAtAction("GetOrt", new { id = Ort.OrtId }, Ort);
         }
 
         // DELETE: api/Ort/5
@@ -117,7 +117,7 @@ namespace KontaktdatenErfassung_API.Controllers
 
         private bool OrtExists(Guid id)
         {
-            return _context.Ort.Any(e => e.Id == id);
+            return _context.Ort.Any(e => e.OrtId == id);
         }
     }
 }

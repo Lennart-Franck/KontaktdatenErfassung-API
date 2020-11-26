@@ -24,6 +24,8 @@ namespace KontaktdatenErfassung_API.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=software-projekt.database.windows.net;Database=Kontaktdaten-DB;User ID=wiuser;Password=K0ntaktdat3n");
             }
         }
 
@@ -144,9 +146,7 @@ namespace KontaktdatenErfassung_API.Models
             {
                 entity.ToTable("unternehmen");
 
-                entity.Property(e => e.UnternehmenId)
-                    .HasColumnName("UnternehmenID")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.UnternehmenId).HasColumnName("UnternehmenID");
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(30)
