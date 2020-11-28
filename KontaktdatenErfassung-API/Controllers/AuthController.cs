@@ -43,7 +43,7 @@ namespace KontaktdatenErfassung_API.Controllers
             try
             {
                 _context.SaveChanges();
-                User user = new User() { Email = unternehmen.Email, Name = unternehmen.Name};
+                User user = new User() { Email = unternehmen.Email, Name = unternehmen.Name, UnternehmenID = unternehmen.UnternehmenId};
                 var tokenString = GenerateJWTToken(user);
 
                 response = Ok(new
@@ -110,7 +110,7 @@ namespace KontaktdatenErfassung_API.Controllers
             {
                 if (EncryptionService.CheckPassword(item.Passwort, loginCredentials.Passwort))
                 {
-                    return new User() { Email = item.Email, Name = item.Name};
+                    return new User() { Email = item.Email, Name = item.Name, UnternehmenID = item.UnternehmenId};
                 }
             }
             return null;

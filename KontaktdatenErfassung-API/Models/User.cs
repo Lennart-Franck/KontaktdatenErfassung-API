@@ -10,5 +10,6 @@ namespace KontaktdatenErfassung_API.Models
         public string Email { get; set; } 
         public string Passwort { get; set; }
         public string Name { get; set; }
+        public int UnternehmenID { get; set; }
     }
 }
