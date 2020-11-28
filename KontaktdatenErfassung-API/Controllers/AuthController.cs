@@ -64,7 +64,7 @@ namespace KontaktdatenErfassung_API.Controllers
         [AllowAnonymous]
         public IActionResult Login([FromBody] User login)
         {
-            IActionResult response = Unauthorized();
+            IActionResult response = Unauthorized("Email oder Passwort sind nicht korrekt");
 
             User user = AuthenticateUser(login);
 
@@ -156,5 +156,22 @@ namespace KontaktdatenErfassung_API.Controllers
 
             return visits;
         }
+
+        [HttpPost("api/places")]
+        [Authorize(Policy = Policies.User)]
+        public async Task<ActionResult> PostPlace([FromBody] Ort ort)
+        {
+            try
+            {
+                await _context.Ort.AddAsync(ort);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            return Ok(ort);
+        }
+
     }
 }
