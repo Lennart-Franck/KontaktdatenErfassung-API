@@ -6,11 +6,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KontaktdatenErfassung_API.Models;
+using Microsoft.AspNetCore.Authorization;
+using KontaktdatenErfassung_API.Attributes;
 
 namespace KontaktdatenErfassung_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
+    [ApiKey]
     public class OrtController : ControllerBase
     {
         private readonly KontaktdatenDBContext _context;
