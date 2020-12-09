@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,6 +37,13 @@ namespace KontaktdatenErfassung_API.Controllers
         public IActionResult SignUp([FromBody] Unternehmen unternehmen)
         {
             IActionResult response = BadRequest();
+
+            if (_context.Unternehmen.Where(x => x.Email == unternehmen.Email).ToList().Count >= 1)
+            {
+                response = Conflict("Diese Email ist bereits registriert");
+                return response;
+            }
+
 
             unternehmen.Passwort = EncryptionService.EncodePassword(unternehmen.Passwort);
 
@@ -64,7 +72,7 @@ namespace KontaktdatenErfassung_API.Controllers
         [AllowAnonymous]
         public IActionResult Login([FromBody] User login)
         {
-            IActionResult response = Unauthorized("Email oder Passwort sind nicht korrekt");
+            IActionResult response = BadRequest("Email oder Passwort sind nicht korrekt");
 
             User user = AuthenticateUser(login);
 
@@ -135,26 +143,43 @@ namespace KontaktdatenErfassung_API.Controllers
 
         [HttpGet("api/visits/{id}")]
         [Authorize(Policy = Policies.User)]
-        public async Task<ActionResult<List<Aufenthalt>>> GetVisits(Guid id, DateTime? from = null, DateTime? till = null)
+        public IActionResult GetVisits(string id)
         {
-            var visits = new List<Aufenthalt>();
+            int week = 0;
+            int month = 0;
+            Guid guid;
 
-            if (from == null)
+            try
             {
-                visits = await _context.Aufenthalt.Where(x => x.OrtId == id).ToListAsync();
+                guid = new Guid(id);
             }
-            else
+            catch
             {
-                visits = await _context.Aufenthalt.Where(x => x.OrtId == id && x.DatumVon == from && x.DatumBis == till).ToListAsync();
-
+                return BadRequest("Guid hat das falsche Format");
             }
+            
 
-            if (visits == null)
+
+            if(_context.Ort.Find(guid) == null)
             {
-                return NotFound();
+                return BadRequest("Ort ist nicht vorhanden");
             }
 
-            return visits;
+            DateTime dateWeekAgo = DateTime.Now.Date.AddDays(-7);
+            DateTime dateMonthAgo = DateTime.Now.Date.AddDays(-30);
+
+            week = _context.Aufenthalt.Where(x => DateTime.Compare(x.DatumVon, dateWeekAgo) > 0 && x.OrtId == guid).ToList().Count;
+
+            month = _context.Aufenthalt.Where(x => DateTime.Compare(x.DatumVon, dateMonthAgo) > 0 && x.OrtId == guid).ToList().Count;
+
+            var result = new
+            {
+                week = week,
+                month = month
+            };
+
+            return Ok(result);
+
         }
 
         [HttpPost("api/places")]
