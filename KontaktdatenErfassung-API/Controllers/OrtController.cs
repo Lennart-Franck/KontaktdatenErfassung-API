@@ -24,14 +24,12 @@ namespace KontaktdatenErfassung_API.Controllers
             _context = context;
         }
 
-        // GET: api/Ort
-        [HttpGet]
-        //public async Task<ActionResult<IEnumerable<Ort>>> GetOrt()
-        //{
-        //    return await _context.Ort.ToListAsync();
-        //}
 
-        // GET: api/Ort/5
+        /// <summary>
+        /// Gibt einen Ort zurück
+        /// </summary>
+        /// <param name="id">Die Guid des Ortes</param>
+        /// <returns>Eine Instanz der <see cref="Ort"/> Klasse</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Ort>> GetOrt(Guid id)
         {
@@ -45,9 +43,12 @@ namespace KontaktdatenErfassung_API.Controllers
             return ort;
         }
 
-        // PUT: api/Ort/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        /// <summary>
+        /// Aktualisiert einen Ort
+        /// </summary>
+        /// <param name="id">Die Guid des Ortes</param>
+        /// <param name="Ort">Die aktuelle <see cref="Ort"/> Klasse</param>
+        /// <returns>Eine Instanz der <see cref="IActionResult"/> Klasse</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrt(Guid id, Ort Ort)
         {
@@ -77,9 +78,11 @@ namespace KontaktdatenErfassung_API.Controllers
             return NoContent();
         }
 
-        // POST: api/Ort
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        /// <summary>
+        /// Erstellt einen Ort
+        /// </summary>
+        /// <param name="Ort">Der zu erstellende Ort</param>
+        /// <returns>Eine Instanz der <see cref="Ort"/> Klasse</returns>
         [HttpPost]
         public async Task<ActionResult<Ort>> PostOrt(Ort Ort)
         {
@@ -103,7 +106,11 @@ namespace KontaktdatenErfassung_API.Controllers
             return CreatedAtAction("GetOrt", new { id = Ort.OrtId }, Ort);
         }
 
-        // DELETE: api/Ort/5
+        /// <summary>
+        /// Löscht einen Ort
+        /// </summary>
+        /// <param name="id">Die <see cref="Guid"/> der OrtID</param>
+        /// <returns>Eine Instanz der <see cref="Ort"/> Klasse</returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult<Ort>> DeleteOrt(Guid id)
         {

@@ -1,14 +1,24 @@
-﻿using System;
+﻿using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Crypto.Paddings;
+using Org.BouncyCastle.Crypto.Parameters;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace KontaktdatenErfassung_API.Services
 {
     public static class EncryptionService
     {
-        //Verschlüsselt ein Passwort
+        /// <summary>
+        /// Verschlüsselt ein Passwort
+        /// </summary>
+        /// <param name="password">Eine Instanz der <see cref="string"/> Klasse mit dem Passwort</param>
+        /// <returns>Das verschlüsselte Passwort als <see cref="string"/></returns>
         public static string EncodePassword(string password)
         {
             byte[] salt;
@@ -26,7 +36,12 @@ namespace KontaktdatenErfassung_API.Services
             return savedPasswordHash;
         }
 
-        //Vergleicht ein Passwort auf seine Richtigkeit
+        /// <summary>
+        /// Vergleicht ein Passwort, mit einem Eingabe Passwort.
+        /// </summary>
+        /// <param name="passwordHash">Das verschlüsselte Passwort</param>
+        /// <param name="inputPassword">Das eingegebene Passwort</param>
+        /// <returns>Eine Instanz der <see cref="bool"/> Klasse mit Erfolg oder Misserfolg</returns>
         public static bool CheckPassword(string passwordHash, string inputPassword)
         {
             string NewPasswordHash = passwordHash.Replace(" ", "+");
@@ -55,5 +70,6 @@ namespace KontaktdatenErfassung_API.Services
                 return false;
             }
         }
+
     }
 }

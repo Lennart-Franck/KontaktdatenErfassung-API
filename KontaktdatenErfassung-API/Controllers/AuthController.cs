@@ -12,9 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace KontaktdatenErfassung_API.Controllers
 {
@@ -31,7 +28,11 @@ namespace KontaktdatenErfassung_API.Controllers
 
         }
         
-
+        /// <summary>
+        /// Erstellt einen Unternehmens Account
+        /// </summary>
+        /// <param name="unternehmen">Das zu erstellende Unternehmen</param>
+        /// <returns>Eine Instanz der <see cref="IActionResult"/> Klasse mit dem HTTP Code</returns>
         [HttpPost("api/sign-up")]
         [AllowAnonymous]
         public IActionResult SignUp([FromBody] Unternehmen unternehmen)
@@ -68,6 +69,12 @@ namespace KontaktdatenErfassung_API.Controllers
             return response;
         }
 
+
+        /// <summary>
+        /// Einloggen eines Unternehmens
+        /// </summary>
+        /// <param name="login">Eine Instanz der <see cref="User"/> Klasse</param>
+        /// <returns>Eine Instanz der <see cref="IActionResult"/> Klasse mit JWT und UserDetails im Body</returns>
         [HttpPost("api/login")]
         [AllowAnonymous]
         public IActionResult Login([FromBody] User login)
@@ -90,7 +97,11 @@ namespace KontaktdatenErfassung_API.Controllers
             return response;
         }
 
-        
+        /// <summary>
+        /// Generiert einen Json Web Token
+        /// </summary>
+        /// <param name="userInfo">Eine Instanz der <see cref="User"/> Klasse</param>
+        /// <returns>Der erstelle JWT als <see cref="string"/> Instanz</returns>
         private string GenerateJWTToken(User userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
@@ -109,7 +120,11 @@ namespace KontaktdatenErfassung_API.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-
+        /// <summary>
+        /// Authentifiziert einen User
+        /// </summary>
+        /// <param name="loginCredentials">Eine Instanz der <see cref="User"/> Klasse</param>
+        /// <returns>Eine Instanz der der <see cref="User"/> Klasse oder Null"/></returns>
         private User AuthenticateUser(User loginCredentials)
         {
             var list =  _context.Unternehmen.Where(x => x.Email == loginCredentials.Email).ToList();
@@ -126,7 +141,11 @@ namespace KontaktdatenErfassung_API.Controllers
 
 
 
-
+        /// <summary>
+        /// Gibt alle Orte für eine UnternehmensID wieder
+        /// </summary>
+        /// <param name="id">Die UnternehmensID</param>
+        /// <returns>Eine <see cref="List{T}"/> Instanz mit <see cref="Ort"/> Instanzen</returns>
         [HttpGet("api/places/{id}")]
         [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<List<Ort>>> GetPlaces(int id)
@@ -141,6 +160,36 @@ namespace KontaktdatenErfassung_API.Controllers
             return places;
         }
 
+        /// <summary>
+        /// Liefert den verschlüsselten Barcode für eine Ort zurück
+        /// </summary>
+        /// <param name="id">Die Instanz der Ort <see cref="Guid"/>/param>
+        /// <returns>Eine Instanz der <see cref="string"/> Klasse mit dem verschlüsselten Barcode</returns>
+        [HttpGet("api/barcode/{id}")]
+        [Authorize(Policy = Policies.User)]
+        public ActionResult<string> GetBarcode(Guid id)
+        {
+            Ort ort = _context.Ort.Where(x => x.OrtId == id).FirstOrDefault();
+
+            if (ort == null)
+                return BadRequest("Place not found");
+
+            // OR;GUID;Bezeichnung;Straße;Hausnummer;Postleitszahl;Stadt
+            string toEncrypt = $"OR;{ort.OrtId};{ort.Bezeichnung};{ort.Straße};{ort.Hausnummer};{ort.Plz};{ort.Stadt}";
+            string encrypted = EncryptionService.Encrypt(toEncrypt, "UM~EB7|PX(Mv~DW");
+
+            return Ok(new
+            {
+                Encrypted = encrypted
+            });
+        }
+
+
+        /// <summary>
+        /// Gibt die Anzahl an Aufenthalten, Wöchentlich und Monatlich für einen Ort zurück
+        /// </summary>
+        /// <param name="id">Die OrtID</param>
+        /// <returns>Eine Instanz der <see cref="IActionResult"/> Klasse mit Wochen und Monats Anzahl im Body</returns>
         [HttpGet("api/visits/{id}")]
         [Authorize(Policy = Policies.User)]
         public IActionResult GetVisits(string id)
@@ -182,6 +231,11 @@ namespace KontaktdatenErfassung_API.Controllers
 
         }
 
+        /// <summary>
+        /// Erstellt einen Ort
+        /// </summary>
+        /// <param name="ort">Eine Instanz der <see cref="Ort"/> Klasse</param>
+        /// <returns>Eine Instanz der <see cref="IActionResult"/> Klasse</returns>
         [HttpPost("api/places")]
         [Authorize(Policy = Policies.User)]
         public async Task<ActionResult> PostPlace([FromBody] Ort ort)

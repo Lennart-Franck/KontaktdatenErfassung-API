@@ -24,14 +24,11 @@ namespace KontaktdatenErfassung_API.Controllers
             _context = context;
         }
 
-        // GET: api/Persons
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<Person>>> GetPerson()
-        //{
-        //    return await _context.Person.ToListAsync();
-        //}
-
-        // GET: api/Persons/5
+        /// <summary>
+        /// Sucht eine Person anhand der Guid und gibt diese zurück
+        /// </summary>
+        /// <param name="id">Die <see cref="Guid"/> der Person</param>
+        /// <returns>Eine Instanz der <see cref="Person"/> Klasse</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Person>> GetPerson(Guid id)
         {
@@ -45,9 +42,12 @@ namespace KontaktdatenErfassung_API.Controllers
             return person;
         }
 
-        // PUT: api/Persons/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        /// <summary>
+        /// Aktualisiert eine Person
+        /// </summary>
+        /// <param name="id">Die <see cref="Guid"/> der Person</param>
+        /// <param name="Person">Die Instanz der zu aktualisierenden <see cref="Person"/> Klasse</param>
+        /// <returns>Eine Instanz der <see cref="IActionResult"/></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPerson(Guid id, Person Person)
         {
@@ -77,9 +77,11 @@ namespace KontaktdatenErfassung_API.Controllers
             return NoContent();
         }
 
-        // POST: api/Persons
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        /// <summary>
+        /// Erstellt eine Person
+        /// </summary>
+        /// <param name="Person">Eine Instanz der <see cref="Person"/> Klasse</param>
+        /// <returns>Eine Instanz der erstellten <see cref="Person"/> Klasse</returns>
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(Person Person)
         {
@@ -103,7 +105,11 @@ namespace KontaktdatenErfassung_API.Controllers
             return CreatedAtAction("GetPerson", new { id = Person.PersonId }, Person);
         }
 
-        // DELETE: api/Persons/5
+        /// <summary>
+        /// Löscht eine Person
+        /// </summary>
+        /// <param name="id">Die <see cref="Guid"/> der Person</param>
+        /// <returns>Eine Instanz der <see cref="IActionResult"/> Klasse<returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult<Person>> DeletePerson(Guid id)
         {
